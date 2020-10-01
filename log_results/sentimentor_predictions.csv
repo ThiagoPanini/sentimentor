@@ -1,0 +1,11 @@
+,datetime_prediction,text_input,prediction,class_sentiment,class_probability
+0,20200926_114155,"'Adorei O PRODUT0, me atendeu perfeitamente e pretendo adquirir mais itens nessa loja',",1,Positive,0.9384566861274006
+1,20200926_114155,"'Produto muito ruim, aperta no pé e a qualidade do tecido é ruim',",0,Negative,0.9302293057703528
+2,20200926_114155,"'Não recomendo',",0,Negative,0.6595319972670507
+3,20200926_114155,"'Serviu perfeitamente, boa compra principalmente pra quem não quer passar frio',",0,Negative,0.5271044088284287
+4,20200926_114155,'muito caro! um @#$%$',0,Negative,0.5258441470529218
+0,20200926_114319,"'Adorei O PRODUT0, me atendeu perfeitamente e pretendo adquirir mais itens nessa loja',",1,Positive,0.9384566861274006
+1,20200926_114319,"'Produto muito ruim, aperta no pé e a qualidade do tecido é ruim',",0,Negative,0.9302293057703528
+2,20200926_114319,"'Não recomendo',",0,Negative,0.6595319972670507
+3,20200926_114319,"'Serviu perfeitamente, boa compra principalmente pra quem não quer passar frio',",0,Negative,0.5271044088284287
+4,20200926_114319,'muito caro! um @#$%$',0,Negative,0.5258441470529218
