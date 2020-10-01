@@ -29,7 +29,7 @@ Written by Thiago Panini - Latest version: September 23th 2020
 import os
 import numpy as np
 import pandas as pd
-from dev.training.project_transformers import ColumnMapping
+from project_transformers import ColumnMapping
 from utils.custom_transformers import import_data, DropNullData, DropDuplicates
 from utils.text_utils import re_breakline, re_dates, re_hiperlinks, re_money, re_negation, re_numbers, \
     re_special_chars, re_whitespaces, ApplyRegex, StemmingProcess, StopWordsRemoval
