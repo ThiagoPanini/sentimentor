@@ -1,16 +1,23 @@
-,Unnamed: 0,datetime_prediction,text_input,prediction,class_sentiment,class_probability
-0,0.0,20200926_114155,"'Adorei O PRODUT0, me atendeu perfeitamente e pretendo adquirir mais itens nessa loja',",1,Positive,0.9384566861274006
-1,1.0,20200926_114155,"'Produto muito ruim, aperta no pé e a qualidade do tecido é ruim',",0,Negative,0.9302293057703528
-2,2.0,20200926_114155,"'Não recomendo',",0,Negative,0.6595319972670507
-3,3.0,20200926_114155,"'Serviu perfeitamente, boa compra principalmente pra quem não quer passar frio',",0,Negative,0.5271044088284287
-4,4.0,20200926_114155,'muito caro! um @#$%$',0,Negative,0.5258441470529218
-5,0.0,20200926_114319,"'Adorei O PRODUT0, me atendeu perfeitamente e pretendo adquirir mais itens nessa loja',",1,Positive,0.9384566861274006
-6,1.0,20200926_114319,"'Produto muito ruim, aperta no pé e a qualidade do tecido é ruim',",0,Negative,0.9302293057703528
-7,2.0,20200926_114319,"'Não recomendo',",0,Negative,0.6595319972670507
-8,3.0,20200926_114319,"'Serviu perfeitamente, boa compra principalmente pra quem não quer passar frio',",0,Negative,0.5271044088284287
-9,4.0,20200926_114319,'muito caro! um @#$%$',0,Negative,0.5258441470529218
-0,,20201001_004506,"'Adorei O PRODUT0, me atendeu perfeitamente e pretendo adquirir mais itens nessa loja',",1,Positive,0.9384566861274006
-1,,20201001_004506,"'Produto muito ruim, aperta no pé e a qualidade do tecido é ruim',",0,Negative,0.9302293057703528
-2,,20201001_004506,"'Não recomendo',",0,Negative,0.6595319972670507
-3,,20201001_004506,"'Serviu perfeitamente, boa compra principalmente pra quem não quer passar frio',",0,Negative,0.5271044088284287
-4,,20201001_004506,'muito caro! um @#$%$',0,Negative,0.5258441470529218
+,Unnamed: 0,Unnamed: 0.1,Unnamed: 0.1.1,Unnamed: 0.1.1.1,datetime_prediction,text_input,prediction,class_sentiment,class_probability
+0,0.0,0.0,0.0,0.0,20200926_114155,"'Adorei O PRODUT0, me atendeu perfeitamente e pretendo adquirir mais itens nessa loja',",1,Positive,0.9384566861274006
+1,1.0,1.0,1.0,1.0,20200926_114155,"'Produto muito ruim, aperta no pé e a qualidade do tecido é ruim',",0,Negative,0.9302293057703528
+2,2.0,2.0,2.0,2.0,20200926_114155,"'Não recomendo',",0,Negative,0.6595319972670507
+3,3.0,3.0,3.0,3.0,20200926_114155,"'Serviu perfeitamente, boa compra principalmente pra quem não quer passar frio',",0,Negative,0.5271044088284287
+4,4.0,4.0,4.0,4.0,20200926_114155,'muito caro! um @#$%$',0,Negative,0.5258441470529218
+5,5.0,5.0,5.0,0.0,20200926_114319,"'Adorei O PRODUT0, me atendeu perfeitamente e pretendo adquirir mais itens nessa loja',",1,Positive,0.9384566861274006
+6,6.0,6.0,6.0,1.0,20200926_114319,"'Produto muito ruim, aperta no pé e a qualidade do tecido é ruim',",0,Negative,0.9302293057703528
+7,7.0,7.0,7.0,2.0,20200926_114319,"'Não recomendo',",0,Negative,0.6595319972670507
+8,8.0,8.0,8.0,3.0,20200926_114319,"'Serviu perfeitamente, boa compra principalmente pra quem não quer passar frio',",0,Negative,0.5271044088284287
+9,9.0,9.0,9.0,4.0,20200926_114319,'muito caro! um @#$%$',0,Negative,0.5258441470529218
+10,10.0,10.0,0.0,,20201001_004506,"'Adorei O PRODUT0, me atendeu perfeitamente e pretendo adquirir mais itens nessa loja',",1,Positive,0.9384566861274006
+11,11.0,11.0,1.0,,20201001_004506,"'Produto muito ruim, aperta no pé e a qualidade do tecido é ruim',",0,Negative,0.9302293057703528
+12,12.0,12.0,2.0,,20201001_004506,"'Não recomendo',",0,Negative,0.6595319972670507
+13,13.0,13.0,3.0,,20201001_004506,"'Serviu perfeitamente, boa compra principalmente pra quem não quer passar frio',",0,Negative,0.5271044088284287
+14,14.0,14.0,4.0,,20201001_004506,'muito caro! um @#$%$',0,Negative,0.5258441470529218
+15,15.0,0.0,,,20201001_194428,"Adorei O PRODUT0, me atendeu perfeitamente e pretendo adquirir mais itens nessa loja",1,Positive,0.9384566861274006
+16,0.0,,,,20201001_194613,Não gostei deste produto. Não me atendeu e custou muito caro,0,Negative,0.8748734770772029
+0,,,,,20201001_194720,"'Adorei O PRODUT0, me atendeu perfeitamente e pretendo adquirir mais itens nessa loja',",1,Positive,0.9384566861274006
+1,,,,,20201001_194720,"'Produto muito ruim, aperta no pé e a qualidade do tecido é ruim',",0,Negative,0.9302293057703528
+2,,,,,20201001_194720,"'Não recomendo',",0,Negative,0.6595319972670507
+3,,,,,20201001_194720,"'Serviu perfeitamente, boa compra principalmente pra quem não quer passar frio',",0,Negative,0.5271044088284287
+4,,,,,20201001_194720,'muito caro! um @#$%$',0,Negative,0.5258441470529218
