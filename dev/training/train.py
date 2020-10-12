@@ -29,7 +29,7 @@ Written by Thiago Panini - Latest version: September 23th 2020
 import os
 import numpy as np
 import pandas as pd
-from dev.training.project_transformers import ColumnMapping
+from project_transformers import ColumnMapping
 from utils.custom_transformers import import_data, DropNullData, DropDuplicates
 from utils.text_utils import re_breakline, re_dates, re_hiperlinks, re_money, re_negation, re_numbers, \
     re_special_chars, re_whitespaces, ApplyRegex, StemmingProcess, StopWordsRemoval
@@ -40,7 +40,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.model_selection import train_test_split, GridSearchCV
 from joblib import dump
 from sklearn.linear_model import LogisticRegression
-from utils.ml_utils import BinaryClassifiersAnalysis, cross_val_performance
+from utils.ml_utils import BinaryClassification, cross_val_performance
 from sklearn.metrics import roc_auc_score, accuracy_score, precision_score, recall_score, f1_score, roc_curve
 
 
@@ -51,9 +51,9 @@ from sklearn.metrics import roc_auc_score, accuracy_score, precision_score, reca
 """
 
 # Variables for address paths
-DATA_PATH = '../../data'
-PIPELINES_PATH = '../../pipelines'
-MODELS_PATH = '../../models'
+DATA_PATH = 'data'
+PIPELINES_PATH = 'pipelines'
+MODELS_PATH = 'models'
 
 # Variables for reading the data
 FILENAME = 'olist_order_reviews_dataset.csv'
@@ -65,7 +65,7 @@ TARGET_COL = 'target'
 PT_STOPWORDS = stopwords.words('portuguese')
 
 # Variables for saving data
-METRICS_FILEPATH = 'metrics/model_performance.csv'
+METRICS_FILEPATH = 'dev/training/metrics/model_performance.csv'
 
 # Variables for retrieving model
 MODEL_KEY = 'LogisticRegression'
@@ -173,7 +173,7 @@ set_classifiers = {
 }
 
 # Creating an object and training the classifiers
-trainer = BinaryClassifiersAnalysis()
+trainer = BinaryClassification()
 trainer.fit(set_classifiers, X_train, y_train, random_search=True, scoring='accuracy')
 
 
@@ -207,8 +207,8 @@ e2e_pipeline = Pipeline([
 
 # Defining a param grid for searching best pipelines options
 param_grid = [{
-    'text_prep__vectorizer__max_features': np.arange(500, 851, 50),
-    'text_prep__vectorizer__min_df': [7, 9, 12, 15, 30],
+    'text_prep__vectorizer__max_features': np.arange(550, 851, 50),
+    'text_prep__vectorizer__min_df': [7, 9, 12, 15],
     'text_prep__vectorizer__max_df': [.4, .5, .6, .7]
 }]
 
@@ -253,10 +253,10 @@ final_performance.to_csv(METRICS_FILEPATH, index=False)
 """
 
 # Creating folders for saving pkl files (if not exists)
-if not os.path.exists('../../models'):
-    os.makedirs('../../models')
-if not os.path.exists('../../pipelines'):
-    os.makedirs('../../pipelines')
+if not os.path.exists(MODELS_PATH):
+    os.makedirs(MODELS_PATH)
+if not os.path.exists(PIPELINES_PATH):
+    os.makedirs(PIPELINES_PATH)
 
 # Saving pkl files
 dump(initial_prep_pipeline, os.path.join(PIPELINES_PATH, 'initial_prep_pipeline.pkl'))

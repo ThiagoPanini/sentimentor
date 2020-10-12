@@ -34,9 +34,9 @@ from datetime import datetime
 """
 
 # Variables for path address
-PIPE_PATH = '../pipelines'
-MODEL_PATH = '../models'
-LOG_PATH = '../log_results'
+PIPE_PATH = 'pipelines'
+MODEL_PATH = 'models'
+LOG_PATH = 'log_results'
 
 # Variables for pkl files
 E2E_PIPE = 'text_prep_pipeline.pkl'
@@ -150,7 +150,7 @@ class Sentimentor():
 if __name__ == '__main__':
     # Instancing an object and executing predictions
     #text_input = 'Adorei O PRODUT0, me atendeu perfeitamente e pretendo adquirir mais itens nessa loja'
-    text_input = pd.read_csv('test_data.csv', sep=';')
+    text_input = pd.read_csv('test/test_data.csv', sep=';')
     sentimentor = Sentimentor(data=text_input)
 
     # Calling the method for preparing the input whatever its type
