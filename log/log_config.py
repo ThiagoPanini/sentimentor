@@ -6,7 +6,7 @@ with pre-configured parameters
 # Libraries
 import logging
 
-def logger_config(logger, level=logging.DEBUG, log_format='%(levelname)s;%(name)s;%(asctime)s;%(filename)s;%(module)s;%(lineno)d;%(message)s',
+def logger_config(logger, level=logging.DEBUG, log_format='%(levelname)s;%(asctime)s;%(filename)s;%(module)s;%(lineno)d;%(message)s',
                   log_filepath='log/application_log.log', filemode='w'):
     """
     Function that creates a logger object with pre-configured params

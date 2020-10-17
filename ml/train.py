@@ -80,7 +80,7 @@ WARNING_MESSAGE = f'Module {__file__} finished with ERROR status'
 
 # Creating a logging object
 logger = logging.getLogger(__name__)
-logger = logger_config(logger, level=logging.DEBUG, filemode='w')
+logger = logger_config(logger, level=logging.DEBUG, filemode='a')
 
 
 """
