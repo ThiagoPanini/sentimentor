@@ -29,11 +29,11 @@ Written by Thiago Panini - Latest version: October 12th 2020
 
 # Importing libs
 import logging
-from log.log_config import logger_config, generic_exception_logging
+from log.log_config import logger_config
 import os
 import numpy as np
 import pandas as pd
-from ml.train.custom_transformers import *
+from ml.custom_transformers import *
 from nltk.corpus import stopwords
 from nltk.stem import RSLPStemmer
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -71,6 +71,9 @@ METRICS_FILEPATH = 'ml/train/performance.csv'
 # Variables for retrieving model
 MODEL_KEY = 'LogisticRegression'
 
+# Messages
+WARNING_MESSAGE = f'Module {__file__} finished with ERROR status'
+
 
 """
 -----------------------------------
@@ -95,7 +98,8 @@ logger.debug('Reading the data')
 try:
     df = import_data(os.path.join(DATA_PATH, FILENAME), usecols=COLS_READ, verbose=False)
 except Exception as e:
-    generic_exception_logging(e, logger=logger, exit_flag=True)
+    log.error(e)
+    log.warning(WARNING_MESSAGE)
 
 
 """
@@ -126,7 +130,8 @@ logger.debug('Applying the initial_prep_pipeline on raw data')
 try:
     df_prep = initial_prep_pipeline.fit_transform(df)
 except Exception as e:
-    generic_exception_logging(e, logger=logger, exit_flag=True)
+    log.error(e)
+    log.warning(WARNING_MESSAGE)
 
 
 """
@@ -162,14 +167,16 @@ try:
     X = df_prep[CORPUS_COL].tolist()
     y = df_prep[TARGET_COL]
 except Exception as e:
-    generic_exception_logging(e, logger=logger, exit_flag=True)
+    log.error(e)
+    log.warning(WARNING_MESSAGE)
 
 # Applying pipeline
 logger.debug('Applying text_prep_pipeline on X data')
 try:
     X_prep = text_prep_pipeline.fit_transform(X)
 except Exception as e:
-    generic_exception_logging(e, logger=logger, exit_flag=True)
+    log.error(e)
+    log.warning(WARNING_MESSAGE)
 
 # Splitting the data into training and testing data
 X_train, X_test, y_train, y_test = train_test_split(X_prep, y, test_size=.20, random_state=42)
@@ -180,7 +187,8 @@ try:
     df_prep[CORPUS_COL].to_csv(os.path.join(DATA_PATH, 'X_data.csv'), index=False)
     df_prep[TARGET_COL].to_csv(os.path.join(DATA_PATH, 'y_data.csv'), index=False)
 except Exception as e:
-    generic_exception_logging(e, logger=logger, exit_flag=True)
+    log.error(e)
+    log.warning(WARNING_MESSAGE)
 
 
 """
@@ -213,7 +221,8 @@ try:
     trainer = BinaryClassification()
     trainer.fit(set_classifiers, X_train, y_train, random_search=True, scoring='accuracy', verbose=0)
 except Exception as e:
-    generic_exception_logging(e, logger=logger, exit_flag=True)
+    log.error(e)
+    log.warning(WARNING_MESSAGE)
 
 
 """
@@ -229,7 +238,8 @@ try:
     performance = trainer.evaluate_performance(X_train, y_train, X_test, y_test, cv=5, save=True, overwrite=True, 
                                                 performances_filepath=METRICS_FILEPATH)
 except Exception as e:
-    generic_exception_logging(e, logger=logger, exit_flag=True)
+    log.error(e)
+    log.warning(WARNING_MESSAGE)
 
 
 """
@@ -261,7 +271,6 @@ param_grid = [{
     'text_prep__vectorizer__max_df': [.6]
 }]
 
-
 # Searching for best options
 logger.debug('Searching for the best hyperparams combination')
 try:
@@ -269,7 +278,8 @@ try:
     grid_search_prep.fit(X, y)
     logger.info(f'Done searching. The set of new hyperparams are: {grid_search_prep.best_params_}')
 except Exception as e:
-    generic_exception_logging(e, logger=logger, exit_flag=True)
+    log.error(e)
+    log.warning(WARNING_MESSAGE)
 
 # Returning the best options
 logger.debug('Updating model hyperparams')
@@ -283,14 +293,16 @@ try:
     e2e_pipeline.named_steps['text_prep'].named_steps['vectorizer'].min_df = vectorizer_min_df
     e2e_pipeline.named_steps['text_prep'].named_steps['vectorizer'].max_df = vectorizer_max_df
 except Exception as e:
-    generic_exception_logging(e, logger=logger, exit_flag=True)
+    log.error(e)
+    log.warning(WARNING_MESSAGE)
 
 # Fitting the model again
 logger.debug('Fitting the final model using the final pipeline')
 try:
     e2e_pipeline.fit(X, y)
 except Exception as e:
-    generic_exception_logging(e, logger=logger, exit_flag=True)
+    log.error(e)
+    log.warning(WARNING_MESSAGE)
 
 
 """
@@ -308,7 +320,8 @@ try:
     final_performance = final_performance.append(performance)
     final_performance.to_csv(METRICS_FILEPATH, index=False)
 except Exception as e:
-    generic_exception_logging(e, logger=logger, exit_flag=True)
+    log.error(e)
+    log.warning(WARNING_MESSAGE)
 
 
 """
@@ -333,4 +346,5 @@ try:
     dump(final_model, os.path.join(MODELS_PATH, 'sentiment_clf_model.pkl'))
     logger.info('Finished the module')
 except Exception as e:
-    generic_exception_logging(e, logger=logger, exit_flag=True)
+    log.error(e)
+    log.warning(WARNING_MESSAGE)
