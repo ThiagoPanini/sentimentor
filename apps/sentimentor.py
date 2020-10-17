@@ -18,15 +18,18 @@ Written by Thiago Panini - Latest version: September 26th 2020
 ---------------------------------------------------------------
 """
 
-# Importing libraries
-import logging
-from log.log_config import logger_config, generic_exception_logging
+# Python
 from datetime import datetime
 from pandas import DataFrame
+from joblib import load
+from os import getenv
+from os.path import isfile
+from dotenv import load_dotenv
 
-# Creating a logging object
-logger = logging.getLogger(__name__)
-logger = logger_config(logger, level=logging.DEBUG, filemode='a')
+# Reading env variables
+_ENV_FILE = '.env'
+if isfile(_ENV_FILE):
+    load_dotenv(_ENV_FILE)
 
 
 """
@@ -37,10 +40,10 @@ logger = logger_config(logger, level=logging.DEBUG, filemode='a')
 
 class Sentimentor():
 
-    def __init__(self, data, pipeline, model):
-        self.data = data
-        self.pipeline = pipeline
-        self.model = model
+    def __init__(self, input_data):
+        self.input_data = input_data
+        self.pipeline = load(getenv('TEXT_PIPELINE'))
+        self.model = load(getenv('MODEL'))
 
     def prep_input(self):
         """
@@ -64,13 +67,13 @@ class Sentimentor():
         """
 
         # Verify if the type of input data
-        if type(self.data) is str:
-            self.data = [self.data]
-        elif type(self.data) is DataFrame:
-            self.data = list(self.data.iloc[:, 0].values)
+        if type(self.input_data) is str:
+            self.input_data = [self.input_data]
+        elif type(self.input_data) is DataFrame:
+            self.input_data = list(self.input_data.iloc[:, 0].values)
 
         # Apply the pipeline to prepare the input data
-        return self.pipeline.transform(self.data)
+        return self.pipeline.transform(self.input_data)
 
     def make_predictions(self):
         """
@@ -98,12 +101,12 @@ class Sentimentor():
         # Building up a pandas DataFrame to delivery the results
         results = {
             'datetime_prediction': datetime.now().strftime('%Y%m%d_%H%M%S'),
-            'text_input': self.data,
+            'text_input': self.input_data,
             'prediction': pred,
             'class_sentiment': class_sentiment,
             'class_probability': class_proba
         }
-        df_results = DataFrame(results)
+        #df_results = DataFrame(results)
 
         # Exporting results
         """if export_results:
@@ -120,4 +123,4 @@ class Sentimentor():
                 # File log doesn't exists, creating one
                 df_results.to_csv(os.path.join(export_path, ALL_LOG_FILE), index=False)"""
 
-        return df_results
+        return results
