@@ -5,6 +5,9 @@ needed for receiving an input from an API call and return the request
 
 # Libraries
 import logging
+from dotenv import load_dotenv
+from os import getenv
+from os.path import join, dirname, isfile
 from apps.sentimentor import Sentimentor
 from log.log_config import logger_config, generic_exception_logging
 from joblib import load
@@ -17,19 +20,18 @@ from os.path import join
 -----------------------------------
 """
 
+# Reading env variables from .env
+_ENV_FILE = join(dirname(__file__), '.env')
+if isfile(_ENV_FILE):
+    load_dotenv(dotenv_path=_ENV_FILE)
+
 # Creating a logging object
 logger = logging.getLogger(__name__)
 logger = logger_config(logger, level=logging.DEBUG, filemode='a')
 
-# Variables for path address
-PIPE_PATH = 'ml/pipelines'
-MODEL_PATH = 'ml/models'
-LOG_PATH = 'log/application_log.log'
+# Messages
+WARNING_MESSAGE = f'Module {__file__} finished with ERROR status'
 
-# Variables for pkl files
-TEXT_PIPE = 'text_prep_pipeline.pkl'
-MODEL = 'sentiment_clf_model.pkl'
-TRAIN = False
 
 """
 -----------------------------------
@@ -41,27 +43,32 @@ TRAIN = False
 if __name__ == '__main__':
 
     # Training the model (if applicable)
-    if TRAIN:
-        from ml.train import train
+    if bool(getenv('TRAIN')):
+        logger.info('Starting train.py script')
+        from ml import train
     
     # Reading pkl files
     logger.debug('Reading pkl files')
     try:
-        pipeline = load(join(PIPE_PATH, TEXT_PIPE))
-        model = load(join(MODEL_PATH, MODEL))
+        pipeline = load(getenv('TEXT_PIPELINE'))
+        model = load(getenv('MODEL'))
     except Exception as e:
-        generic_exception_logging(e, logger=logger, exit_flag=True)
+        logger.error(e)
+        logger.warning(WARNING_MESSAGE)
+        exit()
 
     # Fake input
     text_input = 'Não gostei deste produto. Não me atendeu e custou muito caro'
     #text_input = pd.read_csv('test/test_data.csv', sep=';')
 
     # Instancing an object and executing predictions
-    sentimentor = Sentimentor(data=text_input, pipeline=pipeline, model=model)
     logger.debug('Creating a sentimentor object and making predictions')
+    sentimentor = Sentimentor(data=text_input, pipeline=pipeline, model=model)
     try:
         output = sentimentor.make_predictions()
         logger.info('Module finished with success status')
         exit()
     except Exception as e:
-        generic_exception_logging(e, logger=logger, exit_flag=True)
+        logger.error(e)
+        logger.warning(WARNING_MESSAGE)
+        exit()
