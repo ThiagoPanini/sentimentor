@@ -7,7 +7,9 @@ e-commerce reviews taken from brazilian web-sites
 
 --- SUMMARY ---
 
-1. Project Variables
+1. Project Preparation
+    1.1 Project Variables
+    1.2 Logging Object
 2. Reading Data
 3. Prep Pipelines
     3.1 Initial Preparation
@@ -20,20 +22,18 @@ e-commerce reviews taken from brazilian web-sites
     4.5 Saving pkl Files
 
 ---------------------------------------------------------------
-Written by Thiago Panini - Latest version: September 23th 2020
+Written by Thiago Panini - Latest version: October 12th 2020
 ---------------------------------------------------------------
 """
 
 
 # Importing libs
 import logging
+from log.log_config import logger_config
 import os
 import numpy as np
 import pandas as pd
-from custom_transformers import ColumnMapping
-from utils.custom_transformers import import_data, DropNullData, DropDuplicates
-from utils.text_utils import re_breakline, re_dates, re_hiperlinks, re_money, re_negation, re_numbers, \
-    re_special_chars, re_whitespaces, ApplyRegex, StemmingProcess, StopWordsRemoval
+from ml.custom_transformers import *
 from nltk.corpus import stopwords
 from nltk.stem import RSLPStemmer
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -41,20 +41,20 @@ from sklearn.pipeline import Pipeline
 from sklearn.model_selection import train_test_split, GridSearchCV
 from joblib import dump
 from sklearn.linear_model import LogisticRegression
-from utils.ml_utils import BinaryClassification, cross_val_performance
 from sklearn.metrics import roc_auc_score, accuracy_score, precision_score, recall_score, f1_score, roc_curve
 
 
 """
 -----------------------------------
------- 1. PROJECT VARIABLES -------
+----- 1. PROJECT PREPARATION ------
+       1.1 Project Variables
 -----------------------------------
 """
 
 # Variables for address paths
 DATA_PATH = 'ml/data'
-PIPELINES_PATH = 'pipelines'
-MODELS_PATH = 'models'
+PIPELINES_PATH = 'ml/pipelines'
+MODELS_PATH = 'ml/models'
 
 # Variables for reading the data
 FILENAME = 'olist_order_reviews_dataset.csv'
@@ -71,26 +71,20 @@ METRICS_FILEPATH = 'ml/train/performance.csv'
 # Variables for retrieving model
 MODEL_KEY = 'LogisticRegression'
 
-# Create and configure logger
-LOG_FORMAT = '%(levelname)s;%(name)s;%(asctime)s;%(filename)s;%(module)s;%(lineno)d;%(message)s'
-logging.basicConfig(
-    filename='ml/log/training_log.log',
-    level=logging.DEBUG,
-    format=LOG_FORMAT,
-    filemode='a'
-)
+# Messages
+WARNING_MESSAGE = f'Module {__file__} finished with ERROR status'
+
+
+"""
+-----------------------------------
+----- 1. PROJECT PREPARATION ------
+       1.2. Logging Object
+-----------------------------------
+"""
+
+# Creating a logging object
 logger = logging.getLogger(__name__)
-
-# Defining a generic function for logging errors
-def generic_exception_logging(e, logger, exit_flag=True):
-
-    # Logging an error and a warning
-    logger.error(f'Error on trying to execute the code with stack traceback: {e}')
-    
-    # Finishing program if applicable
-    if exit_flag:
-        logger.warning(f'Module {__file__} finished with ERROR status')
-        exit()
+logger = logger_config(logger, level=logging.DEBUG, filemode='w')
 
 
 """
@@ -102,9 +96,10 @@ def generic_exception_logging(e, logger, exit_flag=True):
 # Reading the data with text corpus and score - Handling possible errors: OK
 logger.debug('Reading the data')
 try:
-    df = import_data(os.path.join(DATA_PATH, FILENAME), usecols=COLS_READ)
+    df = import_data(os.path.join(DATA_PATH, FILENAME), usecols=COLS_READ, verbose=False)
 except Exception as e:
-    generic_exception_logging(e, logger=logger, exit_flag=True)
+    log.error(e)
+    log.warning(WARNING_MESSAGE)
 
 
 """
@@ -135,7 +130,8 @@ logger.debug('Applying the initial_prep_pipeline on raw data')
 try:
     df_prep = initial_prep_pipeline.fit_transform(df)
 except Exception as e:
-    generic_exception_logging(e, logger=logger, exit_flag=True)
+    log.error(e)
+    log.warning(WARNING_MESSAGE)
 
 
 """
@@ -171,14 +167,16 @@ try:
     X = df_prep[CORPUS_COL].tolist()
     y = df_prep[TARGET_COL]
 except Exception as e:
-    generic_exception_logging(e, logger=logger, exit_flag=True)
+    log.error(e)
+    log.warning(WARNING_MESSAGE)
 
 # Applying pipeline
 logger.debug('Applying text_prep_pipeline on X data')
 try:
     X_prep = text_prep_pipeline.fit_transform(X)
 except Exception as e:
-    generic_exception_logging(e, logger=logger, exit_flag=True)
+    log.error(e)
+    log.warning(WARNING_MESSAGE)
 
 # Splitting the data into training and testing data
 X_train, X_test, y_train, y_test = train_test_split(X_prep, y, test_size=.20, random_state=42)
@@ -189,7 +187,8 @@ try:
     df_prep[CORPUS_COL].to_csv(os.path.join(DATA_PATH, 'X_data.csv'), index=False)
     df_prep[TARGET_COL].to_csv(os.path.join(DATA_PATH, 'y_data.csv'), index=False)
 except Exception as e:
-    generic_exception_logging(e, logger=logger, exit_flag=True)
+    log.error(e)
+    log.warning(WARNING_MESSAGE)
 
 
 """
@@ -220,9 +219,10 @@ set_classifiers = {
 logger.debug('Training a sentiment classification model')
 try:
     trainer = BinaryClassification()
-    trainer.fit(set_classifiers, X_train, y_train, random_search=True, scoring='accuracy')
+    trainer.fit(set_classifiers, X_train, y_train, random_search=True, scoring='accuracy', verbose=0)
 except Exception as e:
-    generic_exception_logging(e, logger=logger, exit_flag=True)
+    log.error(e)
+    log.warning(WARNING_MESSAGE)
 
 
 """
@@ -235,9 +235,11 @@ except Exception as e:
 # Evaluating metrics
 logger.debug('Evaluating models performance')
 try:
-    performance = trainer.evaluate_performance(X_train, y_train, X_test, y_test, cv=5, save=True, overwrite=True, performances_filepath=METRICS_FILEPATH)
+    performance = trainer.evaluate_performance(X_train, y_train, X_test, y_test, cv=5, save=True, overwrite=True, 
+                                                performances_filepath=METRICS_FILEPATH)
 except Exception as e:
-    generic_exception_logging(e, logger=logger, exit_flag=True)
+    log.error(e)
+    log.warning(WARNING_MESSAGE)
 
 
 """
@@ -269,15 +271,15 @@ param_grid = [{
     'text_prep__vectorizer__max_df': [.6]
 }]
 
-
 # Searching for best options
 logger.debug('Searching for the best hyperparams combination')
 try:
-    grid_search_prep = GridSearchCV(e2e_pipeline, param_grid, cv=5, scoring='accuracy', verbose=1, n_jobs=-1)
+    grid_search_prep = GridSearchCV(e2e_pipeline, param_grid, cv=5, scoring='accuracy', verbose=0, n_jobs=-1)
     grid_search_prep.fit(X, y)
     logger.info(f'Done searching. The set of new hyperparams are: {grid_search_prep.best_params_}')
 except Exception as e:
-    generic_exception_logging(e, logger=logger, exit_flag=True)
+    log.error(e)
+    log.warning(WARNING_MESSAGE)
 
 # Returning the best options
 logger.debug('Updating model hyperparams')
@@ -291,14 +293,16 @@ try:
     e2e_pipeline.named_steps['text_prep'].named_steps['vectorizer'].min_df = vectorizer_min_df
     e2e_pipeline.named_steps['text_prep'].named_steps['vectorizer'].max_df = vectorizer_max_df
 except Exception as e:
-    generic_exception_logging(e, logger=logger, exit_flag=True)
+    log.error(e)
+    log.warning(WARNING_MESSAGE)
 
 # Fitting the model again
 logger.debug('Fitting the final model using the final pipeline')
 try:
     e2e_pipeline.fit(X, y)
 except Exception as e:
-    generic_exception_logging(e, logger=logger, exit_flag=True)
+    log.error(e)
+    log.warning(WARNING_MESSAGE)
 
 
 """
@@ -316,7 +320,8 @@ try:
     final_performance = final_performance.append(performance)
     final_performance.to_csv(METRICS_FILEPATH, index=False)
 except Exception as e:
-    generic_exception_logging(e, logger=logger, exit_flag=True)
+    log.error(e)
+    log.warning(WARNING_MESSAGE)
 
 
 """
@@ -341,4 +346,5 @@ try:
     dump(final_model, os.path.join(MODELS_PATH, 'sentiment_clf_model.pkl'))
     logger.info('Finished the module')
 except Exception as e:
-    generic_exception_logging(e, logger=logger, exit_flag=True)
+    log.error(e)
+    log.warning(WARNING_MESSAGE)

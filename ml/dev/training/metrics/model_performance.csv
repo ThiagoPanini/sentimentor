@@ -1,4 +1,0 @@
-anomesdia,anomesdia_datetime,model,approach,acc,precision,recall,f1,auc,total_time
-20201001,2020-10-01 20:29:49.033345,LogisticRegression,Final Model,0.8793,0.9035,0.8984,0.9009,0.9377,2.108
-20201001,2020-10-01 18:40:51.668771,LogisticRegression,Treino 5 K-folds,0.8798,0.9037,0.8987,0.9012,0.9382,1.526
-20201001,2020-10-01 18:40:51.668771,LogisticRegression,Teste,0.8777,0.9053,0.8946,0.8999,0.933,0.011
