@@ -12,10 +12,15 @@
 
 # Python
 from json import dumps
+import logging
 
 # Third
-from apps.sentimentor import Sentimentor
+from ml.sentimentor import Sentimentor
+from flask import make_response
+from log.log_config import logger_config
 
+# Creating a logger object
+logger = logger_config(logging.getLogger(__file__), filemode='a')
 
 def associate_resources(app):
     """
@@ -36,23 +41,37 @@ def associate_resources(app):
     create_resources(app)
     """
 
+    # Sentimentor object
+    sentimentor = Sentimentor()
+
     # Definição de rota '/'
     @app.route('/')
     def index():
-        return {'hello': 'World Hiro'}
+        logger.info('Hello World test')
+        return make_response(dumps({'Hello': 'World'}))
 
-    # Definição de rota '/home'
-    @app.route('/home')
-    def home():
+    # Definição de rota '/train'
+    @app.route('/train')
+    def train():
+        # Executing train() method from Sentimentor class
+        try:
+            sentimentor.train()
+            sentimentor.trained = True
+        except Exception as e:
+            logger.error(e)
+            logger.warning('Error on training the model')
 
-        # Fake input
-        input_data = 'Não gostei deste produto. Não me atendeu e custou muito caro'
-
-        # Creating a Sentimentor object and making predictions
-        sentimentor = Sentimentor(input_data=input_data)
-        output = sentimentor.make_predictions()
+        # Preparing response
         dict_return = {
-            "input_data": input_data,
-            "output": output['class_sentiment']
+            "Operation": "Model training",
+            "Status": "Success"
         }
-        return dumps(dict_return)
+
+        return make_response(dumps(dict_return))
+
+    # Definição de rota '/teste'
+    @app.route('/predict')
+    def predict():
+        fake_input = 'Não gostei do produto. Péssimo atendimento e não compraria novamente. Muito ruim'
+        json_predictions = sentimentor.make_predictions(input_data=fake_input)
+        return make_response(json_predictions)

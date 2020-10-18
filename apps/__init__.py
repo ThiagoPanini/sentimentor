@@ -29,13 +29,22 @@ ser um pacote.
 
 # Python
 from flask import Flask
-from pandas import DataFrame
-from datetime import datetime
+import logging
 
 # Third
 from apps.resources import associate_resources
 from config import config
+from log.log_config import logger_config
 
+
+"""
+-----------------------------------
+------ 1. PROJECT VARIABLES -------
+-----------------------------------
+"""
+
+# Creating a logger object
+logger = logger_config(logger=logging.getLogger(__file__), filemode='a')
 
 def create_app(config_name):
     """
@@ -55,12 +64,21 @@ def create_app(config_name):
     """
 
     # Inicializa objeto Flask
-    app = Flask('api-user')
+    try:
+        app = Flask('api-user')
+    except Exception as e:
+        logger.error(e)
+        logger.warning('Error on building the application')
 
     # Aplica a configuração de acordo com parâmetro da função
     app.config.from_object(config[config_name])
 
     # Aplica rotas na aplicação instanciada
-    associate_resources(app)
+    logger.info('Application started')
+    try:
+        associate_resources(app)
+    except Exception as e:
+        logger.error(e)
+        logger.warning('Error on defining routes for the application')
 
     return app

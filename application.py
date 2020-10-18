@@ -10,6 +10,7 @@ from os.path import join, dirname, isfile
 
 # Third
 from apps import create_app
+from ml.sentimentor import Sentimentor
 
 
 """
@@ -23,6 +24,16 @@ _ENV_FILE = join(dirname(__file__), '.env')
 if isfile(_ENV_FILE):
     load_dotenv(dotenv_path=_ENV_FILE)
 
+# Messages
+WARNING_MESSAGE = f'Module {__file__} finished with ERROR status'
+
+
+"""
+-----------------------------------
+----- 2. PYTHON APPLICATION -------
+-----------------------------------
+"""
+
 # Creating application
 app = create_app(getenv('FLASK_ENV') or 'default')
 
@@ -35,6 +46,4 @@ if __name__ == '__main__':
     debug = app.config['DEBUG']
 
     # Initializing application from flask web server
-    app.run(
-        host=ip, debug=debug, port=port, use_reloader=debug
-    )
+    app.run(host=ip, debug=debug, port=port, use_reloader=debug)

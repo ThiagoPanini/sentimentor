@@ -25,6 +25,7 @@ from joblib import load
 from os import getenv
 from os.path import isfile
 from dotenv import load_dotenv
+from log.log_config import logger_config
 
 # Reading env variables
 _ENV_FILE = '.env'
@@ -40,10 +41,38 @@ if isfile(_ENV_FILE):
 
 class Sentimentor():
 
-    def __init__(self, input_data):
-        self.input_data = input_data
-        self.pipeline = load(getenv('TEXT_PIPELINE'))
-        self.model = load(getenv('MODEL'))
+    def __init__(self):
+        # Try reading model and pipeline pkl files aready built on training
+        try:
+            self.pipeline = load(getenv('TEXT_PIPELINE'))
+            self.model = load(getenv('MODEL'))
+        except FileNotFoundError as e:
+            # Generating pkl files calling the training method
+            self.train()
+
+    def train(self):
+        """
+        This method trains a sentiment classification model using the raw data
+        put on data/ folder
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        The method doesn't return anything but saves the model and pipelines 
+        pkl files on project folder
+
+        Application
+        -----------
+        # Instancing object and training model
+        sentimentor = Sentimentor(data=input_data)
+        sentimentor.train()
+        """
+
+        #
+
 
     def prep_input(self):
         """
