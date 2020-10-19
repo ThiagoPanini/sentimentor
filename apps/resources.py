@@ -13,6 +13,8 @@
 # Python
 from json import dumps
 import logging
+from pandas import read_csv # Just for faking input
+import numpy as np # Just for faking input
 
 # Third
 from ml.sentimentor import Sentimentor
@@ -72,6 +74,8 @@ def associate_resources(app):
     # Definição de rota '/teste'
     @app.route('/predict')
     def predict():
-        fake_input = 'Não gostei do produto. Péssimo atendimento e não compraria novamente. Muito ruim'
+        # Reading X data and randomly picking a comment
+        fake_data = read_csv('data/X_data.csv')
+        fake_input = fake_data.iloc[np.random.randint(0, len(fake_data)), :].values[0]
         json_predictions = sentimentor.make_predictions(input_data=fake_input)
         return make_response(json_predictions)

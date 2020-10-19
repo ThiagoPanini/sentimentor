@@ -373,7 +373,6 @@ class Sentimentor():
         self.load_pkl()
 
         # Preparing the data and calling the classifier for making predictions
-        logger.debug('Making predictions')
         try:
             text_list = self.prep_input_data(input_data)
             pred = self.model.predict(text_list)
